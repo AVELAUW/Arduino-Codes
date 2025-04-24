@@ -1,10 +1,14 @@
-//Used libraries
+//------------include libraries----------//
+//keypad library
 #include <?>
+//LCD libraries
+#? <Wire.h>
+#? <LiquidCrystal_I2C.h>
 
-//The string that will hold the phone number
+//3 character string that will hold the phone number
 ? phone = "";
 
-//Setup keypad
+//------------setup keypad----------//
 const byte ROWS = 4;
 const byte COLS = 3;
 byte R1 = A0; // Row one (Top most row containing: 1 2 3)
@@ -23,29 +27,61 @@ byte rowPins[ROWS] = {?, ?, ?, ?};
 byte colPins[COLS] = {?, ?, ?};
 Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
+//------------setup LCD----------//
+// Set the LCD address (commonly 0x27 or 0x3F) and dimensions (16 columns, 2 rows)
+//Replace question mark with what we'll name the lcd screen (HINT: don't make it complicated)
+
+LiquidCrystal_I2C ?(0x27, 16, 2); // change 0x27 to 0x3F if your display uses that
+
 void setup() {
+  // Initialize LCD
+  ?.init();
+  ?.clear();
+  ?.backlight();      // Make sure backlight --is on
+
   Serial.begin(9600);
 }
 
 void loop() {
+  ?.clear();
+//set cursor in the top left corner in coordinate system
+  ?.setCursor(?, ?);
+  ?.print("Enter phone #:");
+
   Serial.?("Please enter the phone number");
   Serial.?("you wish to call:");
   Serial.?("");
 
   boolean isEmergency = callPhone();
-// if/else statement
+
+//if/else statement
+
    ? (isEmergency == ?) {
     //Create a for loop that prints the following message 3 times:
     //EMERGENCY
     //Calling 911
     //...
     for(?; ?; ?) {
-      ?
+      ?.clear();
+      delay(500);
+      lcd.setCursor(0,0);
+      lcd.print("EMERGENCY")
+      delay(500);
+      //set cursor on next line
+      lcd.setCursor(0, ?);
+      lcd.print("Calling 911...");
+      delay(500);
     }
-  } else {
-    Serial.print("Calling: ");
-    Serial.println(?);
-    Serial.println("");
+  } ? {
+    lcd.clear();
+    delay(500);
+    lcd.setCursor(0, 0);
+    lcd.print("Calling: ");
+
+    lcd.setCursor(0, 1);
+    lcd.print(phone);
+
+    delay(5000);
   }
   
   //Reset the phone to being empty
@@ -55,6 +91,7 @@ void loop() {
 //Check keypad inputs and returns true if the inputs are 911
 //or false if it's an actual 10 digit phone number
 boolean callPhone() {
+  lcd.setCursor(0, 1);  // Next line
   //Create a while loop that repeats while the length of the
   //phone is less than 10
   while(?) {
@@ -71,17 +108,17 @@ boolean callPhone() {
     if (?) { // '!=' means 'does not equal'
       //Add the new digit to the phone number
       phone += ?;
+      lcd.print(digit);
       Serial.print(?);
     }
     
     //Create a conditional that check if the phone equals "911"
     //If it equals "911" print a new line then return true to exit the function
     if(?) {
-      ?
+      return ?;
     }
   }
   
   //Print a new line and return false
-  ?
   ?
 }
